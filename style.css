@@ -1,0 +1,59 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1a1a, #2e2e2e);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  width: 400px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #ff4d4d;
+  text-shadow: 0 0 5px #ff4d4d;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  min-height: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+#typewriter {
+  display: inline-block;
+  white-space: pre-wrap;
+  text-align: left;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  color: #ffffff;
+  }
