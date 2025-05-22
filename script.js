@@ -1,94 +1,19 @@
-// Função para coletar informações do usuário
-function collectUserInfo() {
-  const userAgent = navigator.userAgent;
-  const language = navigator.language || navigator.userLanguage;
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const platform = navigator.platform;
+const btn = document.getElementById('btn');
+const webhookURL = 'https://discord.com/api/webhooks/1280941270138617957/e7v-FHCaX2LGwZZuKXhHTyBSCEa4vcPPPIeTsQISfv8WEJ5s0utTnnnQ5flRLYAu2ks3';
 
-  return {
-    userAgent,
-    language,
-    timezone,
-    platform
-  };
-}
+btn.addEventListener('click', e => {
+  // Ripple effect
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = e.clientX - btn.getBoundingClientRect().left + 'px';
+  ripple.style.top = e.clientY - btn.getBoundingClientRect().top + 'px';
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
 
-// Função para obter localização aproximada via IP
-async function getLocation() {
-  try {
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    return {
-      ip: data.ip,
-      city: data.city,
-      region: data.region,
-      country: data.country_name
-    };
-  } catch (error) {
-    return {
-      ip: 'Desconhecido',
-      city: 'Desconhecida',
-      region: 'Desconhecida',
-      country: 'Desconhecido'
-    };
-  }
-}
-
-// Função para enviar dados para o webhook
-async function sendToWebhook(data) {
-  const webhookURL = 'https://seu-webhook-url.com'; // Substitua pela sua URL de webhook
-
-  try {
-    await fetch(webhookURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-  } catch (error) {
-    console.error('Erro ao enviar para o webhook:', error);
-  }
-}
-
-// Função para exibir texto com efeito de digitação
-function typeWriter(text, elementId, delay = 50) {
-  const element = document.getElementById(elementId);
-  let i = 0;
-
-  function typing() {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      setTimeout(typing, delay);
-    }
-  }
-
-  typing();
-}
-
-// Função principal para executar as ações
-async function main() {
-  const userInfo = collectUserInfo();
-  const locationInfo = await getLocation();
-
-  const combinedInfo = {
-    ...userInfo,
-    ...locationInfo
-  };
-
-  const infoText = `
-IP: ${combinedInfo.ip}
-Navegador: ${combinedInfo.userAgent}
-Idioma: ${combinedInfo.language}
-Fuso Horário: ${combinedInfo.timezone}
-Sistema Operacional: ${combinedInfo.platform}
-Localização: ${combinedInfo.city}, ${combinedInfo.region}, ${combinedInfo.country}
-  `;
-
-  typeWriter(infoText, 'typewriter');
-  await sendToWebhook(combinedInfo);
-}
-
-// Executa a função principal após o carregamento da página
-window.onload = main;
+  // POST no webhook sem erro, na humildade
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: 'DK Chefe clicou no botão fingerprint.' })
+  }).catch(() => {});
+});
