@@ -1,59 +1,46 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background: linear-gradient(135deg, #1a1a1a, #2e2e2e);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #fff;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0;
+  font-family: monospace;
 }
-
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 30px;
-  width: 400px;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-  text-align: center;
-}
-
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #ff4d4d;
-  text-shadow: 0 0 5px #ff4d4d;
-}
-
-.info-box {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 15px;
-  min-height: 100px;
+.fingerprint-btn {
   position: relative;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #0f0;
+  border-radius: 50%;
+  background: #111;
+  box-shadow: 0 0 10px #0f0;
+  cursor: pointer;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
 }
-
-#typewriter {
-  display: inline-block;
-  white-space: pre-wrap;
-  text-align: left;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
-  color: #ffffff;
-  }
+.fingerprint-btn:hover {
+  box-shadow: 0 0 20px #0f0;
+  transform: scale(1.1);
+}
+svg {
+  stroke: #0f0;
+  fill: none;
+  width: 70px;
+  height: 70px;
+}
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,255,0,0.3);
+  animation: rippleAnim 0.6s ease-out forwards;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+@keyframes rippleAnim {
+  from { width: 0; height: 0; opacity: 0.7; }
+  to { width: 200px; height: 200px; opacity: 0; }
+}
